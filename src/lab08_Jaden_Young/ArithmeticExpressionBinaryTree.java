@@ -4,27 +4,57 @@ import java.util.Scanner;
 
 /**
  *
- * @author jaden.young
+ * @author Jaden Young
  */
 public class ArithmeticExpressionBinaryTree {
     private LinkedBinaryTree<String> tree;
 
 	/**
 	 * Creates a binary tree representing the arithmetic expression.
-	 * @param expression Infix expression that will be converted to a binary 
+	 * @param infixExpression Infix expression that will be converted to a binary 
 	 *	tree
 	 * @throws IllegalArgumentException If the parenthesis () are unbalanced
 	 */
-    public ArithmeticExpressionBinaryTree(String expression) 
+    public ArithmeticExpressionBinaryTree(String infixExpression) 
 			throws IllegalArgumentException {
-		if(!isBalanced(expression))
+		if(!isBalanced(infixExpression))
 			throw new IllegalArgumentException("The expression does not have "
 					+ "balanced parenthesis.");
 		
 		tree = new LinkedBinaryTree<>();
-		
+		//Whew. Converts the infix expression to postfix, then reverses it
+		String postfix = new StringBuilder(
+				InfixToPostfix.convert(infixExpression)).reverse().toString();
+		//Now that it's reversed, we can read it straight forward
+		Scanner scan = new Scanner(postfix);
+		//make the first operation the root node and current node
+		Position<String> current = tree.addRoot(scan.next());
+		while(scan.hasNext()) {
+			current = lowestOpenParent(current);
+			String currentToken = scan.next();
+			try {
+				current = tree.addRight(current, currentToken);
+			} catch(IllegalArgumentException e) {
+				current = tree.addLeft(current, currentToken);
+			}
+		}
     }
-    
+	
+    private Position<String> lowestOpenParent(Position<String> currentNode) {
+		if(isOperator(currentNode.getElement()) 
+				&& (tree.left(currentNode) == null
+				|| tree.right(currentNode) == null)) {
+			return currentNode;
+		}
+		return lowestOpenParent(tree.parent(currentNode));
+	}
+	
+	private boolean isOperator(String input) {
+		return input.equals("+") 
+				|| input.equals("-") 
+				|| input.equals("*")
+				|| input.equals("/");
+	}
 	/**
 	 * Tests if the given expression has balanced parenthesis.
 	 * Tests for ()
@@ -39,22 +69,16 @@ public class ArithmeticExpressionBinaryTree {
 	 * @return True if parenthesis are balanced, false if not
 	 */
 	private boolean isBalanced(String expression) {
-		final String opening = "(";
-		final String closing = ")";
 		Stack<Character> buffer = new LinkedStack<>();
 		for (char c : expression.toCharArray()) {
-			if (opening.indexOf(c) != -1)
+			if (c == '(')
 				buffer.push(c);
-			else if (closing.indexOf(c) != -1) {
+			else if (c == ')') {
 				if(buffer.isEmpty())
 					return false;
-				if (closing.indexOf(c) != opening.indexOf(buffer.pop()));
-					return false;
+				buffer.pop();
 			}
 		}
 		return buffer.isEmpty();
 	}
-    
-	
-	
 }
