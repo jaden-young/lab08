@@ -42,8 +42,7 @@ public class ArithmeticExpressionBinaryTree {
 	
     private Position<String> lowestOpenParent(Position<String> currentNode) {
 		if(isOperator(currentNode.getElement()) 
-				&& (tree.left(currentNode) == null
-				|| tree.right(currentNode) == null)) {
+				&& (tree.left(currentNode) == null)) {
 			return currentNode;
 		}
 		return lowestOpenParent(tree.parent(currentNode));
@@ -55,6 +54,7 @@ public class ArithmeticExpressionBinaryTree {
 				|| input.equals("*")
 				|| input.equals("/");
 	}
+	
 	/**
 	 * Tests if the given expression has balanced parenthesis.
 	 * Tests for ()
@@ -69,13 +69,15 @@ public class ArithmeticExpressionBinaryTree {
 	 * @return True if parenthesis are balanced, false if not
 	 */
 	private boolean isBalanced(String expression) {
-		Stack<Character> buffer = new LinkedStack<>();
-		for (char c : expression.toCharArray()) {
+		LinkedStack<Character> buffer = new LinkedStack<>();
+		for (int i = 0; i < expression.length(); i++) {
+			char c = expression.charAt(i);
 			if (c == '(')
 				buffer.push(c);
 			else if (c == ')') {
-				if(buffer.isEmpty())
+				if(buffer.isEmpty()) {
 					return false;
+				}
 				buffer.pop();
 			}
 		}
