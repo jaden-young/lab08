@@ -56,8 +56,8 @@ public class InfixToPostfix {
 					//putting this many conditions in makes me sick
 					while(!opStack.isEmpty() 
 							&& (opStack.top().equals("*") 
-								|| opStack.top().equals("/"))
-								|| opStack.top().equals("x")) {
+								|| opStack.top().equals("/")
+								|| opStack.top().equals("x"))) {
 						postfix += opStack.pop() + " ";
 					}
 					opStack.push(token);
