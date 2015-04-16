@@ -52,20 +52,4 @@ public class InfixToPostfix {
 				|| input.equals("/")
 				|| input.equals("x");
 	}
-
-//	private static int priority(String operator) {
-//		switch(operator) {
-//			case "(":
-//				return 0;
-//			case "+":
-//			case "-":
-//				return 1;
-//			case "*":
-//			case "/":
-//			case "x":
-//				return 2;
-//			default:
-//				throw new IllegalArgumentException("Invalid operator");
-//		}
-//	}
 }
