@@ -8,7 +8,8 @@ import java.util.Scanner;
  */
 public class ArithmeticExpressionBinaryTree {
     private LinkedBinaryTree<String> tree;
-
+	private String postfix;
+	
 	/**
 	 * Creates a binary tree representing the arithmetic expression.
 	 * @param infixExpression Infix expression that will be converted to a binary 
@@ -22,11 +23,10 @@ public class ArithmeticExpressionBinaryTree {
 					+ "balanced parenthesis.");
 		
 		tree = new LinkedBinaryTree<>();
-		//Whew. Converts the infix expression to postfix, then reverses it
-		String postfix = new StringBuilder(
-				InfixToPostfix.convert(infixExpression)).reverse().toString();
+		postfix = InfixToPostfix.convert(infixExpression);
+		String reversed = new StringBuilder(postfix).reverse().toString();
 		//Now that it's reversed, we can read it straight forward
-		Scanner scan = new Scanner(postfix);
+		Scanner scan = new Scanner(reversed);
 		//make the first operation the root node and current node
 		Position<String> current = tree.addRoot(scan.next());
 		while(scan.hasNext()) {
@@ -40,6 +40,36 @@ public class ArithmeticExpressionBinaryTree {
 		}
     }
 	
+	public double evaluate() {
+		LinkedStack<Double> numStack = new LinkedStack<>();
+		Scanner scan = new Scanner(postfix);
+		while (scan.hasNext()) {
+			String current = scan.next();
+			try {
+				numStack.push(Double.parseDouble(current));
+			} catch (NumberFormatException nfe) {
+				double n2 = numStack.pop();
+				double n1 = numStack.pop();
+				switch(current) {
+					case "+":
+						numStack.push(n1 + n2);
+						break;
+					case "-":
+						numStack.push(n1 - n2);
+						break;
+					case "*":
+					case "x":
+						numStack.push(n1 * n2);
+						break;
+					case "/":
+						numStack.push(n1 / n2);
+						break;
+				}
+			}
+		}
+		return numStack.pop();
+	}
+	
     private Position<String> lowestOpenParent(Position<String> currentNode) {
 		if(isOperator(currentNode.getElement()) 
 				&& (tree.left(currentNode) == null)) {
@@ -52,7 +82,8 @@ public class ArithmeticExpressionBinaryTree {
 		return input.equals("+") 
 				|| input.equals("-") 
 				|| input.equals("*")
-				|| input.equals("/");
+				|| input.equals("/")
+				|| input.equals("x");
 	}
 	
 	/**
