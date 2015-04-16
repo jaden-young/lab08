@@ -15,6 +15,10 @@ public class Test {
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
 		System.out.print("> ");
-		System.out.println(InfixToPostfix.convert(scan.nextLine()));
+		String exp = scan.nextLine();
+		System.out.println(InfixToPostfix.convert(exp));
+		ArithmeticExpressionBinaryTree tree = new ArithmeticExpressionBinaryTree(exp);
+		System.out.println(tree.evaluate());
+		
 	}
 }
