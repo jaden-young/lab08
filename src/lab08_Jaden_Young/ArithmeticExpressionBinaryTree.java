@@ -81,19 +81,37 @@ public class ArithmeticExpressionBinaryTree {
 		}
 		return numStack.pop();
 	}
-	
-	public String preOrder() {
-		Iterable preIterable = tree.preorder();
-		Iterator<Position<String>> preIterator = preIterable.iterator();
-		String result = "";
-		while(preIterator.hasNext()) {
-			Position<String> current = preIterator.next();
-			if(tree.isInternal(current)) {
-			
-			}
-			
+	    
+	public Position<String> root() {
+		return tree.root();
+	}
+	public void preOrder(Position<String> position, int depth) {
+		System.out.println((tree.isInternal(position) ?
+				printInternal(depth * 2) : printExternal(depth * 2)) 
+				+ position.getElement());
+		for (Position<String> current : tree.children(position)) {
+			preOrder(current, depth + 1);
 		}
 	}
+		
+	private String printInternal(int numSpaces) {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < numSpaces; i++) {
+			sb.append(i % 4 == 0 ? "│" : ' ');
+		}
+		sb.append("├── ");
+		return sb.toString();
+	}
+	
+	private String printExternal(int numSpaces) {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < numSpaces; i++) {
+			sb.append(i % 2 == 0 ? "│" : ' ');
+		}
+		sb.append("└── ");
+		return sb.toString();
+	}
+	
 	
     private Position<String> lowestOpenParent(Position<String> currentNode) {
 		if(isOperator(currentNode.getElement()) 
