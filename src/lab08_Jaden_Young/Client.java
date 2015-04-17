@@ -22,14 +22,16 @@ public class Client {
 				int numExpressions = 0;
 				while(scanFile.hasNextLine()) {
 					String exp = scanFile.nextLine();
-					System.out.println(exp);
+					System.out.println("Infix: " + exp);
 					try { 
 						ArithmeticExpressionBinaryTree tree = 
 							new ArithmeticExpressionBinaryTree
 							(exp);
-						System.out.println("----- Expression " + numExpressions
-								+ " = " + tree.evaluate() + " -----");
-						numExpressions++;
+						System.out.println("Postfix: " 
+								+ tree.postfixExpression());
+						System.out.println("----- Expression " + 
+								numExpressions++ + " = " + tree.evaluate() 
+								+ " -----");
 						System.out.println("Preorder");
 						tree.preorder();
 						System.out.println("Postorder");
