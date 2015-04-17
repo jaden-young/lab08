@@ -26,10 +26,12 @@ public class Test {
 				validFile = true;
 				int numExpressions = 0;
 				while(scanFile.hasNextLine()) {
+					String exp = scanFile.nextLine();
+					System.out.println(exp);
 					try { 
 						ArithmeticExpressionBinaryTree tree = 
 							new ArithmeticExpressionBinaryTree
-							(scanFile.nextLine());
+							(exp);
 						System.out.println("----- Expression " + numExpressions
 								+ " = " + tree.evaluate() + " -----");
 						numExpressions++;
@@ -47,12 +49,5 @@ public class Test {
 				System.out.println("Sorry, can't fild that file.");
 			}
 		} while(!validFile);
-		
-		
-		
-//		System.out.print("Enter an expression > ");
-//		String exp = scan.nextLine();
-//		ArithmeticExpressionBinaryTree tree = new ArithmeticExpressionBinaryTree(exp);
-//		tree.preorder();
 	}
 }
