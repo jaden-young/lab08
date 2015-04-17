@@ -25,22 +25,56 @@ public class ArithmeticExpressionBinaryTree {
 		
 		tree = new LinkedBinaryTree<>();
 		postfix = InfixToPostfix.convert(infixExpression);
-		String reversed = new StringBuilder(postfix).reverse().toString();
-		//Now that it's reversed, we can read it straight forward
-		Scanner scan = new Scanner(reversed);
-		//make the first operation the root node and current node
-		Position<String> current = tree.addRoot(scan.next());
+		Scanner scan = new Scanner(postfix);
+		LinkedStack<LinkedBinaryTree<String>> stack = new LinkedStack<>();
 		while(scan.hasNext()) {
-			current = lowestOpenParent(current);
-			String currentToken = scan.next();
-			try {
-				current = tree.addRight(current, currentToken);
-			} catch(IllegalArgumentException e) {
-				current = tree.addLeft(current, currentToken);
+			String current = scan.next();
+			LinkedBinaryTree<String> temp = new LinkedBinaryTree<>();
+			if(!isOperator(current)) {
+				temp.addRoot(current);
+				stack.push(temp);
+			} else {
+				temp.addRoot(current);
+				LinkedBinaryTree<String> right = stack.pop();
+				LinkedBinaryTree<String> left = stack.pop();
+				try {
+					temp.attach(temp.root(), left, right);
+				} catch (NullPointerException npe) {
+					throw new IllegalArgumentException("Unbalanced operators.");
+				}
+				stack.push(temp);
 			}
 		}
+		tree = stack.pop();
+		//String reversed = reversePostfix(postfix);
+		//Now that it's reversed, we can read it straight forward
+		//Scanner scan = new Scanner(reversed);
+		//make the first operation the root node and current node
+//		Position<String> current = tree.addRoot(scan.next());
+//		while(scan.hasNext()) {
+//			current = lowestOpenParent(current);
+//			String currentToken = scan.next();
+//			try {
+//				current = tree.addRight(current, currentToken);
+//			} catch(IllegalArgumentException e) {
+//				current = tree.addLeft(current, currentToken);
+//			}
+//		}
     }
 	
+	private String reversePostfix(String postfix) {
+		StringBuilder sb = new StringBuilder();
+		Scanner scan = new Scanner(postfix);
+		LinkedStack<String> stack = new LinkedStack<>();
+		while(scan.hasNext()) {
+			stack.push(postfix);
+		}
+		while(!stack.isEmpty()) {
+			sb.append(stack.pop());
+			sb.append(" ");
+		}
+		return sb.toString();
+	}
 	/**
 	 * Returns a double value representing the result of the expression
 	 * @return result of the expression
@@ -159,6 +193,9 @@ public class ArithmeticExpressionBinaryTree {
 				|| input.equals("x");
 	}
 	
+	public String postfixExpression() {
+		return postfix;
+	}
 	/**
 	 * Tests if the given expression has balanced parenthesis.
 	 * Tests for ()
