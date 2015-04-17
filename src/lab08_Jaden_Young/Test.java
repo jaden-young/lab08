@@ -5,6 +5,8 @@
  */
 package lab08_Jaden_Young;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
@@ -13,12 +15,44 @@ import java.util.Scanner;
  */
 public class Test {
 	public static void main(String[] args) {
+		//So. Many. Indents.
 		Scanner scan = new Scanner(System.in);
-		System.out.print("> ");
-		String exp = scan.nextLine();
-		System.out.println(InfixToPostfix.convert(exp));
-		ArithmeticExpressionBinaryTree tree = new ArithmeticExpressionBinaryTree(exp);
-		System.out.println(tree.evaluate());
+		Scanner scanFile;
+		boolean validFile = false;
+		do {
+			try {
+				System.out.print("Enter a file name (ex: data.txt) > ");
+				scanFile = new Scanner(new File(scan.nextLine()));
+				validFile = true;
+				int numExpressions = 0;
+				while(scanFile.hasNextLine()) {
+					try { 
+						ArithmeticExpressionBinaryTree tree = 
+							new ArithmeticExpressionBinaryTree
+							(scanFile.nextLine());
+						System.out.println("----- Expression " + numExpressions
+								+ " = " + tree.evaluate() + " -----");
+						numExpressions++;
+						System.out.println("Preorder");
+						tree.preorder();
+						System.out.println("Postorder");
+						tree.postorder();
+						System.out.println("Inorder");
+						tree.inorder();
+					} catch (IllegalArgumentException iae) {
+						System.out.println(iae.getMessage());
+					}
+				}
+			} catch (FileNotFoundException fnfe) {
+				System.out.println("Sorry, can't fild that file.");
+			}
+		} while(!validFile);
 		
+		
+		
+//		System.out.print("Enter an expression > ");
+//		String exp = scan.nextLine();
+//		ArithmeticExpressionBinaryTree tree = new ArithmeticExpressionBinaryTree(exp);
+//		tree.preorder();
 	}
 }
