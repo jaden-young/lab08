@@ -16,8 +16,7 @@ public class InfixToPostfix {
 	 * @param infixExpression Expression to convert
 	 * @return String containing converted expression in postfix notation
 	 */
-	public static String convert(String infixExpression) throws 
-			IllegalArgumentException {
+	public static String convert(String infixExpression) {
 		Scanner scan = new Scanner(infixExpression);
 		String postfix = "";
 		LinkedStack<String> opStack = new LinkedStack<>();
